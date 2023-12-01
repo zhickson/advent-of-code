@@ -21,10 +21,11 @@ lineReader.on('line', function (line) {
 
 // Once reading is complete, calculate the final sum of values.
 lineReader.on('close', function () {
-	let finalSum = 0;
-	calibrationValues.forEach((val) => {
-		finalSum += val;
-	});
+	// Refactored to test out the reduce method for calculating final sum.
+	// Seen a few solutions online use this and was curious.
+	let finalSum = calibrationValues.reduce(
+		(accumulator, currentValue) => accumulator + currentValue
+	,0);
 	console.log( finalSum );
 });
 
