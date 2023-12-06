@@ -27,12 +27,12 @@ function part2(input) {
   let distance = distances.split(":")[1].trim().replace(/ /g, "");
 
   const result = playOneBigEpicGame(time, distance);
-  console.log(result);
+  return result;
 }
 
-part2(input);
-// console.log("Part 1:", part1(input));
-//console.log("Part 2:", part2(input));
+// part1(input)
+console.log("Part 1:", part1(input));
+console.log("Part 2:", part2(input));
 
 function getGames(input) {
   let [times, distances] = input
@@ -51,8 +51,6 @@ function getGames(input) {
 
 // Determine how many ways of beating the record there are
 function getNumWinMethods(game) {
-  const time = new Array(game.time).fill(1);
-
   // for each milliscond in the game, play the game to determine if possible
   const possibleWins = [];
   for (let i = 0; i < game.time; i++) {
@@ -64,23 +62,12 @@ function getNumWinMethods(game) {
   return possibleWins.length;
 }
 
-function playGame(game, holdFor) {
-  let boatSpeed = 0;
-  if (holdFor === 0) {
+function playGame(game, held) {
+  if (held === 0) {
     return 0;
   }
 
-  const timeHolding = Array.from({ length: holdFor }); // ms
-  for (const ms of timeHolding) {
-    // for each ms holding at beginning of race, speed increases by one mm/sec.
-    boatSpeed++;
-  }
-
-  let distanceTravelled = 0;
-  let availableTime = game.time - holdFor;
-  distanceTravelled = availableTime * boatSpeed;
-
-  return distanceTravelled;
+  return (game.time - held) * held;
 }
 
 function playOneBigEpicGame(time, distance) {
