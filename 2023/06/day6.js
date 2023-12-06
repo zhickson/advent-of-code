@@ -62,24 +62,6 @@ function getNumWinMethods(game) {
     }
   }
   return possibleWins.length;
-
-  //   // 0 mm / sec
-  //   let boatSpeed = 0;
-  //   if (holdFor === 0) {
-  //     return 0;
-  //   }
-
-  //   const timeHolding = Array.from({ length: holdFor }); // ms
-  //   for (const ms of timeHolding) {
-  //     // for each ms holding at beginning of race, speed increases by one mm/sec.
-  //     boatSpeed++;
-  //   }
-
-  //   let distanceTravelled = 0;
-  //   let availableTime = game.time - holdFor;
-  //   distanceTravelled = availableTime * boatSpeed;
-
-  //   return distanceTravelled;
 }
 
 function playGame(game, holdFor) {
@@ -130,16 +112,6 @@ function playOneBigEpicGame(time, distance) {
   }
 
   return Math.abs(minWin - maxWin) + 1;
-}
-
-function estimateStepsToLimit(startNumber, endNumber, limit) {
-  // Assuming a linear relationship: nextNumber = currentNumber + step
-  const step = endNumber - startNumber;
-
-  // Calculate the number of steps needed to reach the limit
-  const stepsToLimit = Math.ceil((limit - startNumber) / step);
-
-  return stepsToLimit;
 }
 
 function calculateDistance(time, heldFor) {
