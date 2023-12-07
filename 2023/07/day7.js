@@ -41,7 +41,7 @@ const labels2 = [
   "A",
 ];
 
-// Success.
+// Part 1
 function part1(input) {
   const hands = input.split("\n").map((hand) => hand.split(" "));
 
@@ -66,7 +66,7 @@ function part1(input) {
   console.log("Part 1: " + result);
 }
 
-// Fail.
+// Part 2
 function part2(input) {
   const hands = input.split("\n").map((hand) => hand.split(" "));
 
@@ -74,8 +74,7 @@ function part2(input) {
   for (let [hand, bid] of hands) {
     let newHand = hand;
     if (hand.includes("J")) {
-      // For part 2, need to treat Js differently.
-      // If there is a J anywhere in the string, mark the hand as needing to be recalculated.
+      // If hand contains a "J", then find the best possible hand.
       newHand = maximizeHandStrength(hand, labels2);
     }
     const handType = getHandType(newHand, 2);
@@ -97,9 +96,18 @@ function part2(input) {
   console.log("Part 2: " + result);
 }
 
-// part1(input);
+// Solve
+part1(input);
 part2(input);
 
+/**
+ * Calculate the hand type based on the characters.
+ *
+ * Uses a bunch of if statements and a Set to help determine frequency of characters in a hand.
+ *
+ * @param {string} hand
+ * @returns
+ */
 function getHandType(hand) {
   const chars = hand.split("");
   const charSet = new Set(chars);
@@ -182,7 +190,7 @@ function isOnePair(chars, charSet) {
   );
 }
 
-// Group by the same type.
+// Group hands by their strength.
 function groupBy(arr, key) {
   return arr
     .reduce(function (acc, cur) {
@@ -195,6 +203,8 @@ function groupBy(arr, key) {
 /**
  * Compare two hands that have the same type against each other to find
  * the stronger hand by card values;
+ *
+ * Part 1 only.
  *
  * @param {array} handA
  * @param {array} handB
@@ -228,6 +238,8 @@ function compareTwoHands(handA, handB) {
  * Compare two hands that have the same type against each other to find
  * the stronger hand by card values;
  *
+ * easier to just create a new function for handling this for part 2
+ *
  * @param {array} handA
  * @param {array} handB
  * @returns
@@ -255,12 +267,15 @@ function compareTwoHandsPart2(handA, handB) {
   }
   return ret;
 }
-
-//console.log(maximizeHandStrength("JJKK2", labels2));
-
-// Maximize hand strength logic.
-// Brute force approach -_-
-// For all Js in the hand, replace all of them with each possible character, calculate strength, and store in array, then find max results
+/**
+ * Calculate the best hand when replacing J with some other character.
+ *
+ * Brute force approach -_-
+ *
+ * @param {string} hand
+ * @param {array} availableCharacters
+ * @returns
+ */
 function maximizeHandStrength(hand, availableCharacters) {
   function getHandStrength(hand) {
     // Return a numeric value representing the strength
