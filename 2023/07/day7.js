@@ -24,21 +24,7 @@ const labels = [
   "3",
   "2",
 ];
-// const labels2 = [
-//   "A",
-//   "K",
-//   "Q",
-//   "T",
-//   "9",
-//   "8",
-//   "7",
-//   "6",
-//   "5",
-//   "4",
-//   "3",
-//   "2",
-//   "J",
-// ];
+
 const labels2 = [
   "J",
   "2",
@@ -111,7 +97,7 @@ function part2(input) {
   console.log("Part 2: " + result);
 }
 
-part1(input);
+// part1(input);
 part2(input);
 
 function getHandType(hand) {
@@ -270,62 +256,38 @@ function compareTwoHandsPart2(handA, handB) {
   return ret;
 }
 
+//console.log(maximizeHandStrength("JJKK2", labels2));
+
 // Maximize hand strength logic.
+// Brute force approach -_-
+// For all Js in the hand, replace all of them with each possible character, calculate strength, and store in array, then find max results
 function maximizeHandStrength(hand, availableCharacters) {
   function getHandStrength(hand) {
     // Return a numeric value representing the strength
     return getHandType(hand);
   }
 
-  // However, we only want to apply this if there are more than two unique characters
-  let checkChars = hand.split("");
-  let checkCharSet = new Set(checkChars);
+  const originalStrength = getHandStrength(hand);
 
-  // If there are exactly two unique characters, and one of them is J,
-  // Always replace all instances of J with the other character,
-  // as this would equal a five of a kind.
-  if (checkCharSet.size == 2) {
-    let [otherValue] = [...checkCharSet].filter((value) => value !== "J");
-    return hand.replaceAll("J", otherValue);
+  // If hand is already max strength, no need to process.
+  if (originalStrength === 7) {
+    return hand;
   }
 
-  // Identify the indices of 'J' characters
-  const jIndices = [];
-  for (let i = 0; i < hand.length; i++) {
-    if (hand[i] === "J") {
-      jIndices.push(i);
+  // Loop through all combinations of J replacement and record strengths.
+  let hands = [];
+  for (let char of availableCharacters) {
+    let newHand = hand.replaceAll("J", char);
+    let newStrength = getHandStrength(newHand);
+    if (newStrength > originalStrength) {
+      hands.push([newStrength, newHand]);
     }
   }
 
-  // Initialize variables to keep track of the best replacement
-  let bestReplacement = "A";
-  let maxStrengthIncrease = 0;
+  hands.sort((a, b) => b[0] - a[0]);
 
-  // Iterate over each available character to replace 'J'
-  for (const replacement of availableCharacters) {
-    // Calculate the impact on hand strength for each replacement
-    const strengthIncrease = jIndices.reduce((totalIncrease, index) => {
-      const originalHand = hand.split("");
-      originalHand[index] = replacement;
+  // Would there be a case where there are multiple combos that return the same strength?
+  const bestReplacement = hands.shift()[1];
 
-      const originalStrength = getHandStrength(hand);
-      const newStrength = getHandStrength(originalHand.join(""));
-
-      return totalIncrease + (newStrength - originalStrength);
-    }, 0);
-
-    // Update the best replacement if it increases the overall strength
-    if (strengthIncrease > maxStrengthIncrease) {
-      bestReplacement = replacement;
-      maxStrengthIncrease = strengthIncrease;
-    }
-  }
-
-  // Apply the best replacement to maximize hand strength
-  const modifiedHand = hand.split("");
-  for (const index of jIndices) {
-    modifiedHand[index] = bestReplacement;
-  }
-
-  return modifiedHand.join("");
+  return bestReplacement;
 }
