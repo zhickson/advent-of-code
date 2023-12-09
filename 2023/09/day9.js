@@ -42,14 +42,49 @@ function part1(input) {
     allHistories.reverse();
     sum.push(allHistories[0][allHistories[0].length - 1]);
   }
-  console.log(sum);
+  const result = sum.reduce((a, c) => a + c, 0);
+  console.log(result);
+}
+
+// Part 2
+function part2(input) {
+  const histories = input.map((line) => line.split(" ").map(Number));
+
+  const sum = [];
+  for (let history of histories) {
+    // Loop through each and create new array with the difference.
+    let allHistories = [];
+    allHistories.push(history);
+    while (true) {
+      if (history.every((n) => n === 0)) {
+        history.push(0);
+        break;
+      }
+      history = diff(history);
+      allHistories.push(history);
+    }
+    // Add placeholders
+    allHistories.reverse();
+    allHistories.map((array, index) => {
+      const arrayBelow = allHistories[index - 1];
+      let replace = 0;
+      if (undefined !== arrayBelow) {
+        const firstItem = array[0];
+        const valueBelow = arrayBelow[0];
+        replace = firstItem - valueBelow;
+        array.unshift(replace);
+      }
+    });
+    allHistories.reverse();
+    sum.push(allHistories[0][0]);
+  }
   const result = sum.reduce((a, c) => a + c, 0);
   console.log(result);
 }
 
 // Solve
 part1(lines);
-// part2(input);
+part2(lines);
 
 // Calculate the difference between items in an array.
 function diff(array) {
